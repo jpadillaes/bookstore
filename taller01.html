@@ -1,0 +1,118 @@
+<HTML>
+    <HEAD>
+        <TITLE>Taller 001</TITLE>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue" ></script>
+    </HEAD>
+    <BODY>
+        <main>
+            <table>
+                <thead>
+                    <th>NOMBRES</th>
+                    <th>CEDULA</th>
+                    <th>TELEFONO</th>
+                    <th>EDAD</th>
+                    <th>CONDICION</th>
+                </thead>
+                <tbody>
+                    <tr v-for="(item,idx) in users">
+                        <td>{{item.nombres}}</td>
+                        <td>{{item.cedula}}</td>
+                        <td>{{item.telefono}}</td>
+                        <td>{{item.edad}}</td>
+                        <td><b v-if="item.edad && item.edad>=18">Mayor de Edad</b>
+                            <b v-else-if="item.edad && item.edad>0 && item.edad<18">Menor de Edad</b>
+                            <b v-else>Error</b></td>
+                    </tr>
+                </tbody>
+            </table>
+            <form enctype="text/plain" @submit.prevent="createUser">
+                <p v-if="errors.length">
+                        <b>Corregir el/los error(s):</b>
+                        <ul>
+                          <li v-for="error in errors">{{ error }}</li>
+                        </ul>
+                      </p>
+                    <table bgcolor="#cccccc" border="0" cellpadding="6" cellspacing="0" width="400">
+                        <tr>
+                            <td align="right" valign="top"><b>Nombres</b></td>
+                            <td><input type="text" size="25" name="nombres" v-model="objUser.nombres"></td>
+                        </tr>
+                        <tr>
+                            <td align="right" valign="top"><b>Cedula</b></td>
+                            <td><input type="text" size="25" name="cedula" v-model="objUser.cedula"></td>
+                        </tr>
+                        <tr>
+                            <td align="right" valign="top"><b>Telefono</b></td>
+                            <td><input type="text" size="25" name="telefono" v-model="objUser.telefono"></td>
+                        </tr>
+                        <tr>
+                            <td align="right" valign="top"><b>Edad</b></td>
+                            <td><input type="text" size="25" name="edad" v-model="objUser.edad" min="1">
+                                <b v-if="objUser.edad && objUser.edad<0">Error</b>
+                                </td>
+                        </tr>
+                        <tr>
+                            <td align="right" valign="top"><b>Pulsa una vez</b>&nbsp; <b>&gt;</b> </td>
+                            <td align="center">&nbsp;
+                                <input type="submit" value="GUARDAR">
+                                <input type="reset" value="BORRAR"> </td>
+                        </tr>
+                    </table>
+            </form>
+            {{ $data }}
+        </main>
+    </BODY>
+    <script type="text/javascript">
+        new Vue({
+            el:'main',
+            data:{
+                errors:[],
+                users:[
+                    {"nombres":"Jose Padilla","cedula":"0924568792","telefono":"0996776555","edad":"30"},
+                    {"nombres":"Pablo Marmol","cedula":"0924568222","telefono":"0996776335","edad":"15"}
+                    ],
+                objUser:{"nombres":null,"cedula":null,"telefono":null,"edad":null}
+
+            },
+            methods:{
+                createUser(){
+                    this.errors = [];
+                    if(!this.objUser.nombres) this.errors.push("Nombres requeridos.");
+                    if(!this.objUser.cedula) this.errors.push("Cedula requeridos.");
+                    if(!this.objUser.telefono) this.errors.push("Telefono requeridos.");
+                    if(!this.objUser.edad) this.errors.push("Edad requeridos.");
+                    if(this.objUser.edad<0 || !this.validNumber(this.objUser.edad)){
+                        this.errors.push("Edad debe ser numero mayor que 0.")
+                        return true;
+                    } else
+                    if(this.errors.length){
+                        return true;
+                    } else{
+                        this.users.unshift(this.objUser);
+                        this.orderUser;
+                        this.objUser={"nombres":null,"cedula":null,"telefono":null,"edad":null}
+                    }
+                    //e.preventDefault();
+                    
+                },
+                validNumber(number) {
+                    var re = /^[1-9]+/;
+                    return re.test(number);
+                }
+            },
+            computed:{
+                orderUser(){
+                return this.users.sort(function(a,b){
+                    if(a.nombres>b.nombres){
+                        return 1;
+                    }
+                    if(a.nombres<b.nombres){
+                        return -1;
+                    }
+                    return 0;
+                });
+                }
+            }
+        });
+    </script>
+</HTML>

@@ -1,0 +1,63 @@
+<HTML>
+    <HEAD>
+        <TITLE>Ejemplo 004</TITLE>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue" ></script>
+    </HEAD>
+    <BODY>
+        <main>
+            <table>
+                <thead>
+                    <th>NOMBRE</th>
+                    <th>APELLIDO</th>
+                </thead>
+                <tbody>
+                    <tr v-for="(item,idx) in users">
+                        <td>{{item.nombre}}</td>
+                        <td>{{item.apellido}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <form enctype="text/plain" @submit.prevent="createUser">
+                <input type="text" size="25" placeholder="nombre" v-model="objUser.nombre"> </td>
+                <input type="text" size="25" placeholder="apellido" v-model="objUser.apellido"> </td>
+                <input type="submit" value="GUARDAR">
+                <input type="reset" value="BORRAR">
+            </form>
+            {{ $data }}
+        </main>
+    </BODY>
+    <script type="text/javascript">
+        new Vue({
+            el:'main',
+            data:{
+                users:[
+                    {"nombre":"Jose","apellido":"Padilla"},
+                    {"nombre":"Martha","apellido":"Arevalo"},
+                    {"nombre":"Diana","apellido":"Marin"}
+                    ],
+                objUser:{"nombre":null,"apellido":null}
+
+            },
+            methods:{
+                createUser(){
+                    this.users.unshift(this.objUser);
+                    this.orderUser;
+                    this.objUser={"nombre":null,"apellido":null}
+                }
+            },
+            computed:{
+                orderUser(){
+                return this.users.sort(function(a,b){
+                    if(a.nombre>b.nombre){
+                        return 1;
+                    }
+                    if(a.nombre<b.nombre){
+                        return -1;
+                    }
+                    return 0;
+                });
+                }
+            }
+        });
+    </script>
+</HTML>
